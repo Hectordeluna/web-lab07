@@ -16,14 +16,14 @@
     justify-content: center;
 }
 
-.video-container {
+.form-container {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
 
 }
 
-.videos {
+.forms {
     background-color: rgb(224, 224, 224);
     width: 50%;
     justify-content: center;
@@ -54,7 +54,8 @@ body {
 
 li>p {
     margin-left: 10px;
-    color: white; 
+    margin: 20px;
+    color: black; 
     font-size: 20px;
 }
 

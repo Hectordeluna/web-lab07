@@ -23,9 +23,48 @@ document.getElementById("newPost").onclick = function() {
           },
         body: JSON.stringify(data),
     }).then(data => {
-        return data.text();
-    }).then(response => {
-        getall();
+        if (!data.ok) {
+            document.getElementById("errorId").innerHTML = "";
+            var textnode = document.createTextNode(data.status + " " + data.statusText);         
+            document.getElementById("errorId").appendChild(textnode);   
+        } else {
+            document.getElementById("errorId").innerHTML = "";
+            getall();
+            return data.text();
+        }
+    });     
+};
+
+document.getElementById("update").onclick = function() {
+    event.preventDefault();
+    let title = document.getElementById("title").value;
+    let content = document.getElementById("content").value;
+    let author = document.getElementById("author").value;
+    let id = document.getElementById("id").value;
+
+    let data = {
+        "id" : id,
+        "title": title,
+        "author": author,
+        "content": content,
+    };
+
+    let response = fetch('http://localhost:8080/blog-posts/' + id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(data),
+    }).then(data => {
+        if (!data.ok) {
+            document.getElementById("errorId").innerHTML = "";
+            var textnode = document.createTextNode(data.status + " " + data.statusText);         
+            document.getElementById("errorId").appendChild(textnode);   
+        } else {
+            document.getElementById("errorId").innerHTML = "";
+            getall();
+            return data.text();
+        }
     });     
 };
 
@@ -38,9 +77,15 @@ document.getElementById("deletePost").onclick = function() {
         method: 'DELETE',
         headers: {'content-type': 'application/json'},
     }).then(data => {
-        return data.text();
-    }).then(response => {
-        getall();
+        if (!data.ok) {
+            document.getElementById("errorId").innerHTML = "";
+            var textnode = document.createTextNode(data.status + " " + data.statusText);         
+            document.getElementById("errorId").appendChild(textnode);   
+        } else {
+            document.getElementById("errorId").innerHTML = "";
+            getall();
+            return data.text();
+        }
     });     
 };
 
@@ -54,15 +99,31 @@ function getall() {
         'Access-Control-Allow-Origin': '*'
         },
     }).then(data => {
-        return data.text();
+        if (!data.ok) {
+            document.getElementById("errorId").innerHTML = "";
+            var textnode = document.createTextNode(data.status + " " + data.statusText);         
+            document.getElementById("errorId").appendChild(textnode);   
+        } else {
+            return data.text();
+        }
     }).then(response => {
         response = JSON.parse(response);
         console.log(response);
         response.forEach(element => {
-            var node = document.createElement("li");                 // Create a <li> node
-            var textnode = document.createTextNode(element.author + element.content);         // Create a text node
-            node.appendChild(textnode);                              // Append the text to <li>
-            document.getElementById("list").appendChild(node);     // Append <li> to <ul> with id="myList" 
+            var node = document.createElement("li"); 
+            var id = document.createElement("p");                 
+            var textnode = document.createTextNode(element.id);         
+            id.appendChild(textnode);                 
+            var content = document.createElement("p");                 
+            var textnode = document.createTextNode(element.author + " " + element.title + " " + element.content);         
+            content.appendChild(textnode);                             
+            var date = document.createElement("p");                 
+            var textnode = document.createTextNode(element.publishDate);
+            date.appendChild(textnode); 
+            node.appendChild(id);                                 
+            node.appendChild(content);                                    
+            node.appendChild(date);                                                                     
+            document.getElementById("list").appendChild(node);    
         });
     });  
 }
